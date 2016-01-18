@@ -1,4 +1,6 @@
 import React, { Component, PropTypes } from 'react'
+import CommentsList from './CommentsList'
+import {Toggle} from '../mixins/Toggle';
 
 class Article extends Component {
     static propTypes = {
@@ -7,32 +9,20 @@ class Article extends Component {
             text: PropTypes.string.isRequired
         })
     }
-
-    constructor(...args) {
-        super(...args)
-        this.state = {
-            isOpen: false
-        }
-    }
-
     render() {
         if (!this.props.article) return <span>No article</span>
-        const { text, title } = this.props.article
-        const body = this.state.isOpen ? <section>{text}</section> : null
+        const {superToggle, isOpen , article} = this.props;
+        const { text, title, comments } = article;
+        const body = isOpen ? <section>{text}</section> : null;
+        const commentsList = isOpen ? <CommentsList comments={comments} /> : null;
         return (
             <div>
-                <a href = "#" onClick = {this.handelClick}>{title}</a>
+                <a href = "#" onClick = {superToggle}>{title}</a>
                 {body}
+                {commentsList}
             </div>
         )
     }
-
-    handelClick = (ev) => {
-        ev.preventDefault()
-        this.setState({
-            isOpen: !this.state.isOpen
-        })
-    }
 }
 
-export default Article
+export default Toggle(Article)

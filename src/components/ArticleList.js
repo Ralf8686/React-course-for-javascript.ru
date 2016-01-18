@@ -8,22 +8,20 @@ class ArticleList extends Component{
         articles: PropTypes.array.isRequired
     }
     render() {
-        const { articles } = this.props
-        if (!articles.length) return <h3>No articles</h3>
+        if (!this.props.articles.length) return <h3>No articles</h3>
+        const { articles, getHint, showHint, hideHint } = this.props
         const articleItems = articles.map((article) => <li key = {article.id}
-                                                           onMouseOver = {this.props.showHint.call(this, article.title)}
-                                                           onMouseLeave = {this.props.hideHint.bind(this)}
+                                                           onMouseOver = {showHint(article.title)}
+                                                           onMouseLeave = {hideHint}
         >
             <Article article = {article} ref= {article.id.toString()} />
         </li>)
         return (
             <div>
-                {this.props.getHint.call(this)}
+                {getHint()}
                 <ul>{articleItems}</ul>
             </div>
         )
-    }
-    componentDidMount() {
     }
 }
 

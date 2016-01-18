@@ -13,6 +13,7 @@ export default [
     },{
         title: 'Other Article',
         text: 'Some other text',
-        id: 2
+        id: 2,
+        comments: []
     }
 ]
