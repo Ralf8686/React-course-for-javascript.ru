@@ -1,27 +1,54 @@
 import React, { Component, PropTypes } from 'react'
 import ArticleList from './ArticleList'
 import linkedState from 'react-addons-linked-state-mixin'
+import { articles, comments} from '../stores'
+import { addArticle } from '../actions/articleActions'
 
 const Container = React.createClass({
     mixins: [linkedState],
 
-    propTypes: {
-        articles: PropTypes.array.isRequired
-    },
-
     getInitialState: function() {
         return {
-            inputVal: ''
+            newTitle: '',
+            articles: articles.getOrLoadAll(),
+            loading: articles.loading
         };
     },
 
+    componentDidMount() {
+        articles.addListener(this.articlesChange)
+        comments.addListener(this.articlesChange)
+    },
+
+    componentWillUnmount() {
+        articles.removeListener(this.articlesChange)
+        comments.removeListener(this.articlesChange)
+    },
+
     render() {
+        const { articles, loading } = this.state
+        if (loading) return <h1>LOADING...</h1>
         return (
             <div>
-                <input valueLink = {this.linkState("inputVal")}/>
-                <ArticleList articles = {this.props.articles} />
+                <input valueLink = {this.linkState("newTitle")}/>
+                <a href = "#" onClick = {this.addArticle}>Add new Article</a>
+                <ArticleList articles = {articles} />
             </div>
         )
+    },
+
+    articlesChange() {
+        this.setState({
+            articles: articles.getOrLoadAll(),
+            loading: articles.loading
+        })
+    },
+
+    addArticle(ev) {
+        ev.preventDefault()
+        addArticle({
+            title: this.state.newTitle
+        })
     }
 })
 
@@ -34,14 +61,14 @@ class Container extends Component {
     constructor() {
         super()
         this.state = {
-            inputVal: ''
+            newTitle: ''
         }
     }
 
     render() {
         return (
             <div>
-                <input value = {this.state.inputVal} onChange = {this.handleChange}/>
+                <input value = {this.state.newTitle} onChange = {this.handleChange}/>
                 <ArticleList articles = {this.props.articles} />
             </div>
         )
@@ -49,7 +76,7 @@ class Container extends Component {
 
     handleChange = (ev) => {
         this.setState({
-            inputVal: ev.target.value
+            newTitle: ev.target.value
         })
     }
 }
