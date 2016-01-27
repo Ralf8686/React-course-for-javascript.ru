@@ -1,3 +1,4 @@
+
 class Model {
     constructor(data, store) {
         Object.assign(this, data)

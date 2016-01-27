@@ -35,7 +35,7 @@
     "keymirror": "^0.1.1",
     "react": "^0.14.3",
     "react-dom": "^0.14.3",
-    "react-router": "^1.0.0",
+    "react-router": "^1.0.3",
     "react-transform-catch-errors": "^1.0.0",
     "react-transform-hmr": "^1.0.0",
     "redbox-react": "^1.0.1",
@@ -46,10 +46,10 @@
     "webpack-hot-middleware": "^2.0.0"
   },
   "dependencies": {
-    "body-parser": "^1.14.2",
     "events": "^1.1.0",
     "flux": "^2.1.1",
     "http-proxy": "^1.12.0",
-    "react-addons-linked-state-mixin": "^0.14.6"
+    "react-addons-linked-state-mixin": "^0.14.6",
+    "react-router": "^1.0.3"
   }
 }

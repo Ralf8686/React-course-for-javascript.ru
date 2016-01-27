@@ -1,37 +1,39 @@
 import React, { Component, PropTypes } from 'react'
 import CommentList from './CommentList'
+import { articles } from '../stores'
 
 class Article extends Component {
-    static propTypes = {
-        article: PropTypes.shape({
-            title: PropTypes.string.isRequired,
-            text: PropTypes.string.isRequired
-        })
-    }
-
     constructor(...args) {
         super(...args)
         this.state = {
-            isOpen: false
+            article: articles.getOrLoadById(this.props.params.id)
         }
+    }
+    componentWillReceiveProps(newProps) {
+        this.articlesChange(newProps)
+    }
+    componentDidMount() {
+        articles.addListener(this.articlesChange)
+    }
+
+    componentWillUnmount() {
+        articles.removeListener(this.articlesChange)
     }
 
     render() {
-        const { article } = this.props
-        if (!article) return <span>No article</span>
-        const body = this.state.isOpen ? this.getBody() : null
+        const { article } = this.state
+        if (!article || article.text === undefined) return <h1>Loading article</h1>
         return (
             <div>
-                <a href = "#" onClick = {this.handelClick}>{article.title}</a>
-                {body}
-            </div>
-        )
+                <h1>{article.title}</h1>
+                <section>
+                    {article.text}
+                </section>
+            </div>)
     }
-
-    handelClick = (ev) => {
-        ev.preventDefault()
+    articlesChange = (newProps) => {
         this.setState({
-            isOpen: !this.state.isOpen
+            article: articles.getOrLoadById((newProps || this.props).params.id)
         })
     }
 
