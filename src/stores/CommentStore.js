@@ -100,14 +100,13 @@ class CommentStore extends Store {
         return this.loadingByOffset.indexOf(''+offset + limit) >= 0;
     }
     getOrLoadByOffset(offset, limit) {
-        console.log(arguments)
         if (!this.isLoadedByOffset(offset, limit) && !this.isLoadingByOffset(offset, limit)){
             loadCommentByOffset(offset, limit)
         }
         const comments = this.itemsOrder
-                .slice(offset, offset + limit + 1)
-                .map((el) => this.getById(el))
-        return comments.length > 0 && comments[0].text ? comments : [];
+                .slice(offset, offset + limit)
+                .map(el => this.getById(el))
+        return comments;
     }
 
 }
