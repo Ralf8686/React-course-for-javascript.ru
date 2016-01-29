@@ -67,7 +67,6 @@ class ArticleStore extends Store {
                     break;
 
                 case LOAD_ARTICLE_BY_ID_START:
-                    console.log('---', 'start');
                     this.loadingArticles.push(data.args[0])
                     break;
 
@@ -88,7 +87,6 @@ class ArticleStore extends Store {
     getOrLoadById(id) {
         const article = this.getById(id)
         const isLoading = this.loadingArticles.indexOf(id) >= 0
-        console.log('---', isLoading);
         if ((!article || article.text === undefined) && !isLoading) setTimeout(() => loadArticleById(id), 0)
         return article
     }

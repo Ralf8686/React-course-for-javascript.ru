@@ -1,7 +1,7 @@
 import AppDispatcher from '../Dispatcher'
-import { ADD_NEW_COMMENT, DELETE_COMMENT, LOAD_COMMENTS } from './constants'
+import { ADD_NEW_COMMENT, DELETE_COMMENT, LOAD_COMMENTS, LOAD_COMMENTS_BY_OFFSET } from './constants'
 import { asyncAC } from './api/utils'
-import { loadCommentsForArticle } from './api/comment'
+import { loadForArticle, loadByOffset} from './api/comment'
 
 export function addComment(article, text) {
 /**
@@ -29,4 +29,5 @@ export function deleteComment(id, article) {
     })
 }
 
-export const loadComments = asyncAC(LOAD_COMMENTS, loadCommentsForArticle)
+export const loadComments = asyncAC(LOAD_COMMENTS, loadForArticle)
+export const loadCommentByOffset = asyncAC(LOAD_COMMENTS_BY_OFFSET, loadByOffset)
