@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {loadCommentsByLimitOffset} from '../actions/commentActions'
+
 class CommentPage extends Component {
 	render() {
 		return (
