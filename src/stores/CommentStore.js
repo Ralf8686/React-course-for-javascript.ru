@@ -3,7 +3,8 @@ import AppDispatcher from '../Dispatcher'
 import Store from './Store'
 import { ADD_NEW_COMMENT, DELETE_COMMENT, LOAD_ARTICLES_SUCCESS,
     LOAD_COMMENTS_START, LOAD_COMMENTS_FAIL, LOAD_COMMENTS_SUCCESS,
-    LOAD_COMMENTS_PAGE_START, LOAD_COMMENTS_PAGE_SUCCESS, LOAD_COMMENTS_PAGE_FAIL
+    LOAD_COMMENTS_PAGE_START, LOAD_COMMENTS_PAGE_SUCCESS, LOAD_COMMENTS_PAGE_FAIL,
+    SET_COMMENTS_FILTER_USER
 } from '../actions/constants'
 import { loadComments, loadForPage } from '../actions/commentActions'
 
@@ -11,6 +12,7 @@ class CommentStore extends Store {
     constructor(...args) {
         super(...args)
         this.pages = []
+        this.filterByUser = 'all';
 
         this.dispatchToken = AppDispatcher.register((action) => {
             const { type, data } = action
@@ -62,8 +64,22 @@ class CommentStore extends Store {
                     this.__totalComments = data.response.total
                     this.emitChange()
                     break;
+                case SET_COMMENTS_FILTER_USER:
+                    this.filterByUser = data.user;
+                    this.emitChange()
             }
         })
+    }
+
+    getAllUsers(){
+        const users = [];
+        for(let i = 0, j = this.items.length; i< j; i++){
+            !users.includes(this.items[i].user) && users.push(this.items[i].user)
+        }
+        return users
+    }
+    getFilter(){
+        return this.filterByUser
     }
 
     getTotalComments() {
@@ -71,7 +87,11 @@ class CommentStore extends Store {
     }
     getOrLoadForPage(num) {
         if (!this.pages[num]) return loadForPage(num)
-        return this.pages[num].map(this.getById.bind(this))
+        const comments = this.pages[num].map(this.getById.bind(this))
+        if(this.filterByUser !== 'all'){
+            return comments.filter(el => el.user === this.filterByUser)
+        }
+        return comments
     }
 }
 

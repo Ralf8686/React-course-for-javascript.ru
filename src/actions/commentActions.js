@@ -1,5 +1,5 @@
 import AppDispatcher from '../Dispatcher'
-import { ADD_NEW_COMMENT, DELETE_COMMENT, LOAD_COMMENTS, LOAD_COMMENTS_PAGE } from './constants'
+import { ADD_NEW_COMMENT, DELETE_COMMENT, LOAD_COMMENTS, LOAD_COMMENTS_PAGE, SET_COMMENTS_FILTER_USER } from './constants'
 import { asyncAC } from './api/utils'
 import { loadCommentsForArticle, loadPage } from './api/comment'
 
@@ -26,6 +26,15 @@ export function deleteComment(id, article) {
         data: {
             id,
             article
+        }
+    })
+}
+
+export function setFilterUser(user) {
+    AppDispatcher.dispatch({
+        type: SET_COMMENTS_FILTER_USER,
+        data: {
+            user
         }
     })
 }

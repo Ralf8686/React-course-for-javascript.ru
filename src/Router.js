@@ -22,7 +22,7 @@ export default (
             <Route path=":id" component={Article}/>
         </Route>
         <Route path = "/comments" component = {CommentIndex} >
-            <IndexRedirect to="1" />
+            <IndexRedirect to="all" />
             <Route path = ":num" component = {CommentsPage} />
         </Route>
         <Route path = "/login" component = {Login} />

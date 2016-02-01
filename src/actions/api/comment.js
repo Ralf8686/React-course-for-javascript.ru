@@ -5,5 +5,11 @@ export function loadCommentsForArticle(id) {
 }
 
 export function loadPage(num) {
-    return $.get(`/api/comment?limit=10&offset=${(num - 1) * 10}`)
+	let offset = (num - 1) * 10;
+	let limit = 10;
+	if(num === 'all'){
+		offset = 0
+		limit = 999
+	}
+	return $.get(`/api/comment?limit=${limit}&offset=${offset}`)
 }
