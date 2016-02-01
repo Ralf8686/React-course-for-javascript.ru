@@ -1,14 +1,23 @@
 import linkedState from 'react-addons-linked-state-mixin'
 import { addUser } from '../actions/userActions'
-import React from 'react'
+import React, {PropTypes} from 'react'
 import { Link } from 'react-router'
-
+import { users } from '../stores'
 const Login = React.createClass({
     mixins: [linkedState],
     getInitialState() {
         return {
             username: ''
         }
+    },
+    componentDidMount() {
+        users.addListener(this.redirect)
+    },
+    componentWillUnmount() {
+        users.removeChangeListener(this.redirect)
+    },
+    contextTypes : {
+        history: PropTypes.object
     },
     render: function() {
         return (
@@ -25,6 +34,9 @@ const Login = React.createClass({
         addUser({
             name: this.state.username
         })
+    },
+    redirect() {
+        this.context.history.pushState(null, '/articles/new')
     }
 });
 
