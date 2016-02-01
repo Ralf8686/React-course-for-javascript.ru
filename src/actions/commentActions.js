@@ -1,9 +1,9 @@
 import AppDispatcher from '../Dispatcher'
-import { ADD_NEW_COMMENT, DELETE_COMMENT, LOAD_COMMENTS, LOAD_COMMENTS_BY_OFFSET } from './constants'
+import { ADD_NEW_COMMENT, DELETE_COMMENT, LOAD_COMMENTS, LOAD_COMMENTS_PAGE } from './constants'
 import { asyncAC } from './api/utils'
-import { loadForArticle, loadByOffset} from './api/comment'
+import { loadCommentsForArticle, loadPage } from './api/comment'
 
-export function addComment(article, text) {
+export function addComment(article, text, author) {
 /**
     common problems:
         -generating ids here on in UI
@@ -14,7 +14,8 @@ export function addComment(article, text) {
         type: ADD_NEW_COMMENT,
         data: {
             article,
-            text
+            text,
+            author
         }
     })
 }
@@ -29,5 +30,5 @@ export function deleteComment(id, article) {
     })
 }
 
-export const loadComments = asyncAC(LOAD_COMMENTS, loadForArticle)
-export const loadCommentByOffset = asyncAC(LOAD_COMMENTS_BY_OFFSET, loadByOffset)
+export const loadComments = asyncAC(LOAD_COMMENTS, loadCommentsForArticle)
+export const loadForPage = asyncAC(LOAD_COMMENTS_PAGE, loadPage)

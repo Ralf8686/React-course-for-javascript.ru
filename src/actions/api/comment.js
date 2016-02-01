@@ -1,9 +1,9 @@
 import $ from 'jquery'
 
-export function loadForArticle(id) {
+export function loadCommentsForArticle(id) {
     return $.get(`/api/comment?article=${id}`)
 }
 
-export function loadByOffset(offset, limit) {
-    return $.get(`/api/comment?offset=${offset}&limit=${limit}`)
+export function loadPage(num) {
+    return $.get(`/api/comment?limit=10&offset=${(num - 1) * 10}`)
 }

@@ -9,6 +9,9 @@ class Article extends Component {
             article: articles.getOrLoadById(this.props.params.id)
         }
     }
+    shouldComponentUpdate(newProps, newState) {
+        return newState.article != this.state.article
+    }
     componentWillReceiveProps(newProps) {
         this.articlesChange(newProps)
     }
@@ -17,7 +20,7 @@ class Article extends Component {
     }
 
     componentWillUnmount() {
-        articles.removeListener(this.articlesChange)
+        articles.removeChangeListener(this.articlesChange)
     }
 
     render() {
@@ -29,6 +32,7 @@ class Article extends Component {
                 <section>
                     {article.text}
                 </section>
+                <CommentList article = {article} />
             </div>)
     }
     articlesChange = (newProps) => {
