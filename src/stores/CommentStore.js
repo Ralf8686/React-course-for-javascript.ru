@@ -3,16 +3,15 @@ import AppDispatcher from '../Dispatcher'
 import Store from './Store'
 import { ADD_NEW_COMMENT, DELETE_COMMENT, LOAD_ARTICLES_SUCCESS,
     LOAD_COMMENTS_START, LOAD_COMMENTS_FAIL, LOAD_COMMENTS_SUCCESS,
-    LOAD_COMMENTS_PAGE_START, LOAD_COMMENTS_PAGE_SUCCESS, LOAD_COMMENTS_PAGE_FAIL,
-    SET_COMMENTS_FILTER_USER
+    LOAD_ALL_COMMENTS_START, LOAD_ALL_COMMENTS_FAIL, LOAD_ALL_COMMENTS_SUCCESS,
+    LOAD_COMMENTS_PAGE_START, LOAD_COMMENTS_PAGE_SUCCESS, LOAD_COMMENTS_PAGE_FAIL
 } from '../actions/constants'
-import { loadComments, loadForPage } from '../actions/commentActions'
+import { loadComments, loadForPage, loadAllComments } from '../actions/commentActions'
 
 class CommentStore extends Store {
     constructor(...args) {
         super(...args)
         this.pages = []
-        this.filterByUser = 'all';
 
         this.dispatchToken = AppDispatcher.register((action) => {
             const { type, data } = action
@@ -64,34 +63,34 @@ class CommentStore extends Store {
                     this.__totalComments = data.response.total
                     this.emitChange()
                     break;
-                case SET_COMMENTS_FILTER_USER:
-                    this.filterByUser = data.user;
+
+                case LOAD_ALL_COMMENTS_START:
+                    this.loading = true
+                    this.emitChange()
+                    break;
+
+                case LOAD_ALL_COMMENTS_SUCCESS:
+                    this.loading = false
+                    this.loaded = true
+                    data.response.records.forEach(this.add.bind(this))
+                    this.__totalComments = data.response.total
                     this.emitChange()
             }
         })
     }
 
-    getAllUsers(){
-        const users = [];
-        for(let i = 0, j = this.items.length; i< j; i++){
-            !users.includes(this.items[i].user) && users.push(this.items[i].user)
-        }
-        return users
-    }
-    getFilter(){
-        return this.filterByUser
-    }
-
     getTotalComments() {
         return this.__totalComments
     }
+    getOrLoadAll() {
+        if (this.loaded) return this.getAll()
+        if (!this.loading) loadAllComments()
+        return []
+    }
+
     getOrLoadForPage(num) {
         if (!this.pages[num]) return loadForPage(num)
-        const comments = this.pages[num].map(this.getById.bind(this))
-        if(this.filterByUser !== 'all'){
-            return comments.filter(el => el.user === this.filterByUser)
-        }
-        return comments
+        return this.pages[num].map(this.getById.bind(this))
     }
 }
 

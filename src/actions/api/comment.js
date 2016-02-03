@@ -13,3 +13,7 @@ export function loadPage(num) {
 	}
 	return $.get(`/api/comment?limit=${limit}&offset=${offset}`)
 }
+
+export function loadAll() {
+    return $.get(`/api/comment`)
+}
